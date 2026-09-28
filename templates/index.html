@@ -1,0 +1,1522 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduGenie 🎓 - AI-Powered Educational Assistant</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome & Marked for Markdown parsing -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --primary-light: #eef2ff;
+            --secondary: #06b6d4;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --surface-card: #1e293b;
+            --surface-border: #334155;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --gradient-hero: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+            --glass-bg: rgba(30, 41, 59, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 20px;
+            --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(236, 72, 153, 0.12) 0%, transparent 40%);
+            background-attachment: fixed;
+        }
+
+        header {
+            border-bottom: 1px solid var(--surface-border);
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .brand-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--gradient-hero);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: white;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+        }
+
+        .brand-text h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #ffffff, #cbd5e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brand-text span {
+            font-size: 0.78rem;
+            color: var(--secondary);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .badge-live {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .badge-dot {
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        /* Hero Banner & Quick Scenarios */
+        .hero {
+            max-width: 1200px;
+            margin: 1.5rem auto 0;
+            padding: 0 1.5rem;
+            text-align: center;
+        }
+
+        .hero h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            max-width: 650px;
+            margin: 0 auto 1.5rem;
+        }
+
+        /* Scenarios Quick Bar */
+        .scenarios-box {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(8px);
+            border-radius: var(--radius-md);
+            padding: 1rem 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .scenarios-label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .scenario-btn {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            border: 1px solid var(--surface-border);
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .scenario-btn:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
+
+        /* Main Container & Tabs */
+        .app-container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto 3rem;
+            padding: 0 1.5rem;
+            flex: 1;
+        }
+
+        .tabs-nav {
+            display: flex;
+            gap: 10px;
+            background: rgba(15, 23, 42, 0.6);
+            padding: 6px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--surface-border);
+            overflow-x: auto;
+            margin-bottom: 1.5rem;
+            scrollbar-width: none;
+        }
+
+        .tabs-nav::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tab-btn {
+            flex: 1;
+            min-width: 150px;
+            padding: 12px 18px;
+            background: transparent;
+            color: var(--text-muted);
+            border: none;
+            border-radius: 10px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .tab-btn i {
+            font-size: 1.1rem;
+        }
+
+        .tab-btn.active {
+            background: var(--gradient-hero);
+            color: white;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.35);
+        }
+
+        .tab-btn:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+        }
+
+        /* Tab Content Panes */
+        .tab-pane {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 900px) {
+            .grid-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--surface-card);
+            border: 1px solid var(--surface-border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-header {
+            margin-bottom: 18px;
+        }
+
+        .card-header h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #fff;
+        }
+
+        .card-header p {
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            margin-top: 4px;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        textarea, input, select {
+            width: 100%;
+            background: #0f172a;
+            border: 1px solid var(--surface-border);
+            color: var(--text-main);
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+
+        textarea:focus, input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.25);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .quick-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .chip {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 9999px;
+            padding: 4px 12px;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .chip:hover {
+            background: rgba(99, 102, 241, 0.2);
+            color: #c7d2fe;
+            border-color: var(--primary);
+        }
+
+        .btn-primary {
+            background: var(--gradient-hero);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            margin-top: 10px;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-primary:hover {
+            opacity: 0.95;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Output Box Styling */
+        .output-card {
+            background: #131d31;
+            border: 1px solid var(--surface-border);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            min-height: 380px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .output-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--surface-border);
+            padding-bottom: 12px;
+            margin-bottom: 16px;
+        }
+
+        .output-title {
+            font-weight: 700;
+            font-size: 1rem;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .output-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--surface-border);
+            color: var(--text-muted);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .output-content {
+            flex: 1;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: #e2e8f0;
+            overflow-y: auto;
+            max-height: 520px;
+            padding-right: 6px;
+        }
+
+        /* Markdown Styling inside output */
+        .output-content h1, .output-content h2, .output-content h3 {
+            color: #fff;
+            margin: 1rem 0 0.5rem;
+            font-family: 'Outfit', sans-serif;
+        }
+        .output-content h2 { font-size: 1.25rem; }
+        .output-content h3 { font-size: 1.1rem; }
+        .output-content p { margin-bottom: 0.85rem; }
+        .output-content ul, .output-content ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .output-content li { margin-bottom: 0.4rem; }
+        .output-content strong { color: #f1f5f9; }
+        .output-content code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.88em;
+            color: #38bdf8;
+        }
+
+        /* Placeholder inside output */
+        .empty-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            min-height: 250px;
+            color: var(--text-muted);
+            text-align: center;
+            gap: 12px;
+        }
+
+        .empty-placeholder i {
+            font-size: 3rem;
+            color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Loading Spinner */
+        .loading-overlay {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(19, 29, 49, 0.85);
+            backdrop-filter: blur(4px);
+            border-radius: var(--radius-md);
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            z-index: 10;
+        }
+
+        .spinner {
+            width: 44px;
+            height: 44px;
+            border: 4px solid rgba(99, 102, 241, 0.2);
+            border-top-color: #6366f1;
+            border-radius: 50%;
+            animation: spin 0.9s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Interactive Quiz Engine UI */
+        .quiz-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .quiz-score-banner {
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.2), rgba(16, 185, 129, 0.2));
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: var(--radius-sm);
+            padding: 14px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .quiz-item {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--surface-border);
+            border-radius: var(--radius-sm);
+            padding: 18px;
+            transition: var(--transition);
+        }
+
+        .quiz-question {
+            font-weight: 600;
+            font-size: 1.05rem;
+            margin-bottom: 12px;
+            color: #f8fafc;
+            display: flex;
+            gap: 10px;
+        }
+
+        .quiz-options {
+            display: grid;
+            gap: 8px;
+        }
+
+        .quiz-option {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--surface-border);
+            padding: 10px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.92rem;
+        }
+
+        .quiz-option:hover:not(.disabled) {
+            background: rgba(99, 102, 241, 0.15);
+            border-color: var(--primary);
+        }
+
+        .quiz-option.correct {
+            background: rgba(16, 185, 129, 0.2) !important;
+            border-color: #10b981 !important;
+            color: #34d399 !important;
+            font-weight: 600;
+        }
+
+        .quiz-option.incorrect {
+            background: rgba(239, 68, 68, 0.2) !important;
+            border-color: #ef4444 !important;
+            color: #f87171 !important;
+        }
+
+        .quiz-feedback {
+            margin-top: 10px;
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 0.88rem;
+            display: none;
+        }
+
+        /* Learning Path Timeline UI */
+        .roadmap-header {
+            margin-bottom: 1.5rem;
+            padding: 16px;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: var(--radius-sm);
+        }
+
+        .roadmap-phase {
+            position: relative;
+            padding-left: 28px;
+            margin-bottom: 24px;
+            border-left: 2px solid var(--primary);
+        }
+
+        .roadmap-phase::before {
+            content: '';
+            position: absolute;
+            left: -9px;
+            top: 0;
+            width: 16px;
+            height: 16px;
+            background: var(--gradient-hero);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+        }
+
+        .phase-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--surface-border);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+        }
+
+        .phase-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .phase-badge {
+            background: rgba(6, 182, 212, 0.15);
+            color: var(--secondary);
+            border: 1px solid rgba(6, 182, 212, 0.3);
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 9999px;
+            font-weight: 600;
+        }
+
+        .milestone-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 0.88rem;
+            margin-bottom: 6px;
+            color: #cbd5e1;
+        }
+
+        .milestone-item i {
+            color: var(--success);
+            margin-top: 3px;
+        }
+
+        /* Toast notifications */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #1e293b;
+            color: #fff;
+            border: 1px solid var(--primary);
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            display: none;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        footer {
+            border-top: 1px solid var(--surface-border);
+            padding: 1.5rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            background: rgba(15, 23, 42, 0.9);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="header-inner">
+            <a href="/" class="brand">
+                <div class="brand-icon">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <div class="brand-text">
+                    <h1>EduGenie</h1>
+                    <span>AI Learning Companion</span>
+                </div>
+            </a>
+            <div class="badge-live">
+                <div class="badge-dot"></div>
+                Powered by Google Gemini
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero & 1-Click Scenario Quickbar -->
+    <div class="hero">
+        <h2>Supercharge Your Learning Journey</h2>
+        <p>Ask questions, simplify tough concepts, test your mastery with AI quizzes, and generate customized roadmaps instantly.</p>
+
+        <div class="scenarios-box">
+            <span class="scenarios-label"><i class="fa-solid fa-bolt"></i> Quick Scenarios:</span>
+            <button class="scenario-btn" onclick="triggerScenario1()">
+                <i class="fa-solid fa-circle-question"></i> Scenario 1: Largest Ocean (Q&A)
+            </button>
+            <button class="scenario-btn" onclick="triggerScenario2()">
+                <i class="fa-solid fa-list-check"></i> Scenario 2: Pythagoras Theorem (Quiz)
+            </button>
+            <button class="scenario-btn" onclick="triggerScenario3()">
+                <i class="fa-solid fa-map-location-dot"></i> Scenario 3: SQL Mastery (Path)
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Workspace -->
+    <main class="app-container">
+
+        <!-- Tabs Navigation -->
+        <div class="tabs-nav">
+            <button class="tab-btn active" onclick="switchTab('ask')">
+                <i class="fa-solid fa-comments"></i> Smart Q&A
+            </button>
+            <button class="tab-btn" onclick="switchTab('explain')">
+                <i class="fa-solid fa-lightbulb"></i> Concept Explainer
+            </button>
+            <button class="tab-btn" onclick="switchTab('quiz')">
+                <i class="fa-solid fa-brain"></i> Quiz Generator
+            </button>
+            <button class="tab-btn" onclick="switchTab('path')">
+                <i class="fa-solid fa-route"></i> Learning Path
+            </button>
+            <button class="tab-btn" onclick="switchTab('summarize')">
+                <i class="fa-solid fa-file-lines"></i> Smart Summarizer
+            </button>
+        </div>
+
+        <!-- 1. SMART Q&A TAB -->
+        <section id="tab-ask" class="tab-pane active">
+            <div class="grid-layout">
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-circle-question" style="color: #6366f1;"></i> Ask Any Educational Question</h3>
+                        <p>Receive clear, smart, and concise explanations grounded in academic curriculum.</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Target Academic Level</label>
+                        <select id="askLevel">
+                            <option value="Middle School">Middle School</option>
+                            <option value="High School" selected>High School</option>
+                            <option value="Undergraduate">Undergraduate / College</option>
+                            <option value="Researcher / Professional">Advanced / Professional</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Your Question</label>
+                        <textarea id="askInput" placeholder="e.g. Which is the largest ocean and how deep is it?"></textarea>
+                        
+                        <div class="quick-chips">
+                            <span class="chip" onclick="fillInput('askInput', 'Which is the largest ocean?')">🌊 Largest ocean</span>
+                            <span class="chip" onclick="fillInput('askInput', 'Explain Newton\'s Third Law of Motion with real examples.')">🍎 Newton's 3rd Law</span>
+                            <span class="chip" onclick="fillInput('askInput', 'Why do leaves change color in autumn?')">🍂 Autumn leaves</span>
+                        </div>
+                    </div>
+
+                    <button class="btn-primary" id="askBtn" onclick="handleAskQuestion()">
+                        <i class="fa-solid fa-paper-plane"></i> Get Smart Answer
+                    </button>
+                </div>
+
+                <div class="output-card">
+                    <div class="loading-overlay" id="askLoading">
+                        <div class="spinner"></div>
+                        <p style="color: #cbd5e1; font-size: 0.9rem;">Consulting Gemini AI...</p>
+                    </div>
+                    <div class="output-header">
+                        <div class="output-title">
+                            <i class="fa-solid fa-sparkles" style="color: #a855f7;"></i> Answer & Explanation
+                        </div>
+                        <div class="output-actions">
+                            <button class="action-btn" onclick="copyOutput('askResult')">
+                                <i class="fa-solid fa-copy"></i> Copy
+                            </button>
+                        </div>
+                    </div>
+                    <div id="askResult" class="output-content">
+                        <div class="empty-placeholder">
+                            <i class="fa-solid fa-comment-dots"></i>
+                            <p>Type an educational question on the left to see EduGenie's answer.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. CONCEPT EXPLAINER TAB -->
+        <section id="tab-explain" class="tab-pane">
+            <div class="grid-layout">
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-lightbulb" style="color: #f59e0b;"></i> Concept Simplifier</h3>
+                        <p>Break down intricate concepts into intuitive mental models and real-world analogies.</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Explanation Style</label>
+                        <select id="explainAudience">
+                            <option value="Beginner (Explain Like I'm 5)" selected>Explain Like I'm 5 (ELI5)</option>
+                            <option value="High School Student">High School (Visual & Conceptual)</option>
+                            <option value="College Student (Technical + Analogy)">College Level (Rigorous + Applied)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Concept or Topic to Simplify</label>
+                        <textarea id="explainInput" placeholder="e.g. How does Quantum Superposition work?"></textarea>
+                        
+                        <div class="quick-chips">
+                            <span class="chip" onclick="fillInput('explainInput', 'How does Quantum Computing work?')">⚛️ Quantum Computing</span>
+                            <span class="chip" onclick="fillInput('explainInput', 'Explain the Theory of Relativity')">🚀 Theory of Relativity</span>
+                            <span class="chip" onclick="fillInput('explainInput', 'How do Neural Networks learn?')">🧠 Neural Networks</span>
+                        </div>
+                    </div>
+
+                    <button class="btn-primary" id="explainBtn" onclick="handleExplain()">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> Simplify Concept
+                    </button>
+                </div>
+
+                <div class="output-card">
+                    <div class="loading-overlay" id="explainLoading">
+                        <div class="spinner"></div>
+                        <p style="color: #cbd5e1; font-size: 0.9rem;">Deconstructing concept...</p>
+                    </div>
+                    <div class="output-header">
+                        <div class="output-title">
+                            <i class="fa-solid fa-brain" style="color: #f59e0b;"></i> Simplified Breakdown
+                        </div>
+                        <div class="output-actions">
+                            <button class="action-btn" onclick="copyOutput('explainResult')">
+                                <i class="fa-solid fa-copy"></i> Copy
+                            </button>
+                        </div>
+                    </div>
+                    <div id="explainResult" class="output-content">
+                        <div class="empty-placeholder">
+                            <i class="fa-solid fa-lightbulb"></i>
+                            <p>Enter any complex topic on the left to receive an easy-to-understand breakdown.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. QUIZ GENERATOR TAB -->
+        <section id="tab-quiz" class="tab-pane">
+            <div class="grid-layout">
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-list-check" style="color: #10b981;"></i> AI Quiz Generator</h3>
+                        <p>Generate interactive multiple-choice quizzes to assess and reinforce your knowledge.</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Difficulty Level</label>
+                        <select id="quizDifficulty">
+                            <option value="Easy">Easy (Fundamentals)</option>
+                            <option value="Medium" selected>Medium (Application & Logic)</option>
+                            <option value="Hard">Hard (Challenging & Conceptual)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Topic or Study Passage</label>
+                        <textarea id="quizTopic" placeholder="e.g. The Pythagoras Theorem and its mathematical applications"></textarea>
+                        
+                        <div class="quick-chips">
+                            <span class="chip" onclick="fillInput('quizTopic', 'The Pythagoras Theorem')">📐 The Pythagoras Theorem</span>
+                            <span class="chip" onclick="fillInput('quizTopic', 'Photosynthesis and cellular respiration')">🌿 Photosynthesis</span>
+                            <span class="chip" onclick="fillInput('quizTopic', 'Python Data Structures: Lists vs Dictionaries')">🐍 Python Data Structures</span>
+                        </div>
+                    </div>
+
+                    <button class="btn-primary" id="quizBtn" onclick="handleGenerateQuiz()">
+                        <i class="fa-solid fa-play"></i> Generate Interactive Quiz
+                    </button>
+                </div>
+
+                <div class="output-card">
+                    <div class="loading-overlay" id="quizLoading">
+                        <div class="spinner"></div>
+                        <p style="color: #cbd5e1; font-size: 0.9rem;">Drafting interactive questions...</p>
+                    </div>
+                    <div class="output-header">
+                        <div class="output-title">
+                            <i class="fa-solid fa-trophy" style="color: #10b981;"></i> Interactive Quiz
+                        </div>
+                        <div class="output-actions">
+                            <button class="action-btn" onclick="resetQuiz()" id="resetQuizBtn" style="display:none;">
+                                <i class="fa-solid fa-rotate-right"></i> Retake
+                            </button>
+                        </div>
+                    </div>
+                    <div id="quizResult" class="output-content">
+                        <div class="empty-placeholder">
+                            <i class="fa-solid fa-puzzle-piece"></i>
+                            <p>Generate a quiz on the left to start testing your knowledge interactively.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. LEARNING PATH TAB -->
+        <section id="tab-path" class="tab-pane">
+            <div class="grid-layout">
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-route" style="color: #06b6d4;"></i> Structured Learning Roadmap</h3>
+                        <p>Get a personalized step-by-step path with milestones, timelines, and projects.</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Current Experience Level</label>
+                        <select id="pathLevel">
+                            <option value="Complete Beginner" selected>Complete Beginner (Zero experience)</option>
+                            <option value="Intermediate">Intermediate (Knows basics)</option>
+                            <option value="Advanced Transition">Advanced (Upskilling to mastery)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Topic / Skill to Master</label>
+                        <textarea id="pathTopic" placeholder="e.g. SQL Database querying and relational design"></textarea>
+                        
+                        <div class="quick-chips">
+                            <span class="chip" onclick="fillInput('pathTopic', 'SQL from Beginner to Advanced')">🗄️ SQL Mastery</span>
+                            <span class="chip" onclick="fillInput('pathTopic', 'Fullstack Web Development with FastAPI & React')">💻 Fullstack Web Dev</span>
+                            <span class="chip" onclick="fillInput('pathTopic', 'Data Science & Machine Learning with Python')">📊 Data Science</span>
+                        </div>
+                    </div>
+
+                    <button class="btn-primary" id="pathBtn" onclick="handleGeneratePath()">
+                        <i class="fa-solid fa-compass"></i> Create Structured Roadmap
+                    </button>
+                </div>
+
+                <div class="output-card">
+                    <div class="loading-overlay" id="pathLoading">
+                        <div class="spinner"></div>
+                        <p style="color: #cbd5e1; font-size: 0.9rem;">Architecting learning roadmap...</p>
+                    </div>
+                    <div class="output-header">
+                        <div class="output-title">
+                            <i class="fa-solid fa-timeline" style="color: #06b6d4;"></i> Personalized Curriculum
+                        </div>
+                        <div class="output-actions">
+                            <button class="action-btn" onclick="copyOutput('pathResult')">
+                                <i class="fa-solid fa-copy"></i> Copy
+                            </button>
+                        </div>
+                    </div>
+                    <div id="pathResult" class="output-content">
+                        <div class="empty-placeholder">
+                            <i class="fa-solid fa-map"></i>
+                            <p>Specify a subject on the left to generate your custom week-by-week learning plan.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. SUMMARIZER TAB -->
+        <section id="tab-summarize" class="tab-pane">
+            <div class="grid-layout">
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-file-lines" style="color: #ec4899;"></i> Educational Summarizer</h3>
+                        <p>Distill complex textbook chapters, academic papers, or articles into digestible summaries.</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Summary Format</label>
+                        <select id="summaryFormat">
+                            <option value="bullet_points" selected>Bullet Points + Key Takeaways</option>
+                            <option value="executive">Concise Revision Abstract</option>
+                            <option value="flashcards">Q&A Revision Flashcards</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Educational Text to Summarize</label>
+                        <textarea id="summaryInput" placeholder="Paste your educational passage, notes, or article here..."></textarea>
+                        
+                        <div class="quick-chips">
+                            <span class="chip" onclick="fillInput('summaryInput', 'The Industrial Revolution marked a period of development in the latter half of the 18th century that transformed largely rural, agrarian societies in Europe and America into industrialized, urban ones. Goods that had once been painstakingly crafted by hand started to be produced in mass quantities by machines in factories, thanks to the introduction of new machines and techniques in textiles, iron making and other industries.')">🏭 Industrial Revolution</span>
+                            <span class="chip" onclick="fillInput('summaryInput', 'Mitochondria are membrane-bound cell organelles that generate most of the chemical energy needed to power the cell\'s biochemical reactions. Chemical energy produced by the mitochondria is stored in a small molecule called adenosine triphosphate (ATP). Mitochondria contain their own small chromosomes.')">⚡ Mitochondria Biology</span>
+                        </div>
+                    </div>
+
+                    <button class="btn-primary" id="summaryBtn" onclick="handleSummarize()">
+                        <i class="fa-solid fa-compress"></i> Summarize Passage
+                    </button>
+                </div>
+
+                <div class="output-card">
+                    <div class="loading-overlay" id="summaryLoading">
+                        <div class="spinner"></div>
+                        <p style="color: #cbd5e1; font-size: 0.9rem;">Extracting key concepts...</p>
+                    </div>
+                    <div class="output-header">
+                        <div class="output-title">
+                            <i class="fa-solid fa-highlighter" style="color: #ec4899;"></i> High-Yield Summary
+                        </div>
+                        <div class="output-actions">
+                            <button class="action-btn" onclick="copyOutput('summaryResult')">
+                                <i class="fa-solid fa-copy"></i> Copy
+                            </button>
+                        </div>
+                    </div>
+                    <div id="summaryResult" class="output-content">
+                        <div class="empty-placeholder">
+                            <i class="fa-solid fa-file-circle-check"></i>
+                            <p>Paste notes or an article on the left to extract the most critical insights.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Toast Popup -->
+    <div id="toast" class="toast"></div>
+
+    <footer>
+        <p>EduGenie &copy; 2026 &bull; AI-Powered Educational Assistant &bull; Built with FastAPI & Google Gemini</p>
+    </footer>
+
+    <script>
+        // Tab Navigation
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+            
+            const selectedBtn = Array.from(document.querySelectorAll('.tab-btn')).find(b => b.getAttribute('onclick').includes(tabName));
+            if (selectedBtn) selectedBtn.classList.add('active');
+            
+            const selectedPane = document.getElementById(`tab-${tabName}`);
+            if (selectedPane) selectedPane.classList.add('active');
+        }
+
+        // Helper: Fill input text
+        function fillInput(elemId, text) {
+            const el = document.getElementById(elemId);
+            if (el) el.value = text;
+        }
+
+        // Helper: Show toast notification
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+
+        // Helper: Copy Output
+        function copyOutput(containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            navigator.clipboard.writeText(container.innerText).then(() => {
+                showToast('Copied to clipboard! 📋');
+            }).catch(() => {
+                showToast('Failed to copy.');
+            });
+        }
+
+        // Scenario 1 Quick Trigger: Largest ocean (Q&A)
+        function triggerScenario1() {
+            switchTab('ask');
+            document.getElementById('askInput').value = "Which is the largest ocean?";
+            handleAskQuestion();
+        }
+
+        // Scenario 2 Quick Trigger: Pythagoras Theorem (Quiz)
+        function triggerScenario2() {
+            switchTab('quiz');
+            document.getElementById('quizTopic').value = "The Pythagoras Theorem";
+            handleGenerateQuiz();
+        }
+
+        // Scenario 3 Quick Trigger: SQL Roadmap
+        function triggerScenario3() {
+            switchTab('path');
+            document.getElementById('pathTopic').value = "SQL (Structured Query Language) from Beginner to Advanced";
+            handleGeneratePath();
+        }
+
+        // 1. Handle Ask Question
+        async function handleAskQuestion() {
+            const text = document.getElementById('askInput').value.trim();
+            const level = document.getElementById('askLevel').value;
+            const loading = document.getElementById('askLoading');
+            const resultDiv = document.getElementById('askResult');
+            const btn = document.getElementById('askBtn');
+
+            if (!text) return showToast('Please enter a question!');
+
+            loading.style.display = 'flex';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch('/api/ask', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text, level })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    resultDiv.innerHTML = marked.parse(data.answer);
+                } else {
+                    resultDiv.innerHTML = `<p style="color: #ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> ${data.detail || 'Error occurred.'}</p>`;
+                }
+            } catch (err) {
+                resultDiv.innerHTML = `<p style="color: #ef4444;"><i class="fa-solid fa-circle-exclamation"></i> Network error: ${err.message}</p>`;
+            } finally {
+                loading.style.display = 'none';
+                btn.disabled = false;
+            }
+        }
+
+        // 2. Handle Explain Concept
+        async function handleExplain() {
+            const concept = document.getElementById('explainInput').value.trim();
+            const target_audience = document.getElementById('explainAudience').value;
+            const loading = document.getElementById('explainLoading');
+            const resultDiv = document.getElementById('explainResult');
+            const btn = document.getElementById('explainBtn');
+
+            if (!concept) return showToast('Please enter a concept to simplify!');
+
+            loading.style.display = 'flex';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch('/api/explain', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ concept, target_audience })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    resultDiv.innerHTML = marked.parse(data.explanation);
+                } else {
+                    resultDiv.innerHTML = `<p style="color: #ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> ${data.detail || 'Error occurred.'}</p>`;
+                }
+            } catch (err) {
+                resultDiv.innerHTML = `<p style="color: #ef4444;"><i class="fa-solid fa-circle-exclamation"></i> Network error: ${err.message}</p>`;
+            } finally {
+                loading.style.display = 'none';
+                btn.disabled = false;
+            }
+        }
+
+        // 3. Handle Quiz Generation
+        let currentQuiz = [];
+        let userAnswers = {};
+
+        async function handleGenerateQuiz() {
+            const topic = document.getElementById('quizTopic').value.trim();
+            const difficulty = document.getElementById('quizDifficulty').value;
+            const loading = document.getElementById('quizLoading');
+            const resultDiv = document.getElementById('quizResult');
+            const btn = document.getElementById('quizBtn');
+            const resetBtn = document.getElementById('resetQuizBtn');
+
+            if (!topic) return showToast('Please enter a topic for the quiz!');
+
+            loading.style.display = 'flex';
+            btn.disabled = true;
+            userAnswers = {};
+
+            try {
+                const res = await fetch('/api/quiz', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ topic, difficulty, num_questions: 4 })
+                });
+                const data = await res.json();
+                if (data.success && Array.isArray(data.quiz)) {
+                    currentQuiz = data.quiz;
+                    renderQuiz(data.quiz, data.topic);
+                    resetBtn.style.display = 'inline-flex';
+                } else {
+                    resultDiv.innerHTML = `<p style="color: #ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> Failed to parse quiz.</p>`;
+                }
+            } catch (err) {
+                resultDiv.innerHTML = `<p style="color: #ef4444;"><i class="fa-solid fa-circle-exclamation"></i> Network error: ${err.message}</p>`;
+            } finally {
+                loading.style.display = 'none';
+                btn.disabled = false;
+            }
+        }
+
+        function renderQuiz(quiz, topic) {
+            const container = document.getElementById('quizResult');
+            let html = `
+                <div class="quiz-container">
+                    <div class="quiz-score-banner" id="scoreBanner">
+                        <div>
+                            <strong style="color: #fff; font-size: 1.05rem;">Quiz on: ${topic}</strong>
+                            <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 2px;">Select an option for each question to see instant feedback.</p>
+                        </div>
+                        <div id="scoreCounter" style="font-weight: 700; font-size: 1.1rem; color: #10b981;">0 / ${quiz.length} Solved</div>
+                    </div>
+            `;
+
+            quiz.forEach((q, qIndex) => {
+                html += `
+                    <div class="quiz-item" id="q-card-${qIndex}">
+                        <div class="quiz-question">
+                            <span>Q${qIndex + 1}.</span>
+                            <div>${q.question}</div>
+                        </div>
+                        <div class="quiz-options">
+                `;
+
+                q.options.forEach((opt, optIndex) => {
+                    html += `
+                        <div class="quiz-option" id="opt-${qIndex}-${optIndex}" onclick="selectQuizOption(${qIndex}, ${optIndex})">
+                            <i class="fa-regular fa-circle" id="opt-icon-${qIndex}-${optIndex}"></i>
+                            <span>${opt}</span>
+                        </div>
+                    `;
+                });
+
+                html += `
+                        </div>
+                        <div class="quiz-feedback" id="feedback-${qIndex}">
+                            <strong><i class="fa-solid fa-circle-info"></i> Explanation:</strong> ${q.explanation}
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `</div>`;
+            container.innerHTML = html;
+        }
+
+        function selectQuizOption(qIndex, selectedOptIndex) {
+            if (userAnswers[qIndex] !== undefined) return; // already answered
+            userAnswers[qIndex] = selectedOptIndex;
+
+            const q = currentQuiz[qIndex];
+            const correctIndex = q.correct_index;
+            const feedbackDiv = document.getElementById(`feedback-${qIndex}`);
+
+            // Disable other options in this question
+            q.options.forEach((_, optIdx) => {
+                const el = document.getElementById(`opt-${qIndex}-${optIdx}`);
+                el.classList.add('disabled');
+            });
+
+            const selectedEl = document.getElementById(`opt-${qIndex}-${selectedOptIndex}`);
+            const correctEl = document.getElementById(`opt-${qIndex}-${correctIndex}`);
+
+            if (selectedOptIndex === correctIndex) {
+                selectedEl.classList.add('correct');
+                document.getElementById(`opt-icon-${qIndex}-${selectedOptIndex}`).className = 'fa-solid fa-circle-check';
+                feedbackDiv.style.background = 'rgba(16, 185, 129, 0.15)';
+                feedbackDiv.style.border = '1px solid #10b981';
+                feedbackDiv.style.color = '#34d399';
+            } else {
+                selectedEl.classList.add('incorrect');
+                document.getElementById(`opt-icon-${qIndex}-${selectedOptIndex}`).className = 'fa-solid fa-circle-xmark';
+                
+                if (correctEl) {
+                    correctEl.classList.add('correct');
+                    document.getElementById(`opt-icon-${qIndex}-${correctIndex}`).className = 'fa-solid fa-circle-check';
+                }
+                feedbackDiv.style.background = 'rgba(239, 68, 68, 0.15)';
+                feedbackDiv.style.border = '1px solid #ef4444';
+                feedbackDiv.style.color = '#fca5a5';
+            }
+
+            feedbackDiv.style.display = 'block';
+            updateQuizScore();
+        }
+
+        function updateQuizScore() {
+            let correct = 0;
+            let totalAnswered = Object.keys(userAnswers).length;
+            
+            Object.keys(userAnswers).forEach(qIdx => {
+                if (userAnswers[qIdx] === currentQuiz[qIdx].correct_index) {
+                    correct++;
+                }
+            });
+
+            const scoreCounter = document.getElementById('scoreCounter');
+            if (scoreCounter) {
+                scoreCounter.innerText = `Score: ${correct} / ${currentQuiz.length} (Answered ${totalAnswered}/${currentQuiz.length})`;
+            }
+        }
+
+        function resetQuiz() {
+            if (currentQuiz.length > 0) {
+                userAnswers = {};
+                renderQuiz(currentQuiz, document.getElementById('quizTopic').value);
+            }
+        }
+
+        // 4. Handle Learning Path Generation
+        async function handleGeneratePath() {
+            const topic = document.getElementById('pathTopic').value.trim();
+            const current_level = document.getElementById('pathLevel').value;
+            const loading = document.getElementById('pathLoading');
+            const resultDiv = document.getElementById('pathResult');
+            const btn = document.getElementById('pathBtn');
+
+            if (!topic) return showToast('Please enter a learning topic!');
+
+            loading.style.display = 'flex';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch('/api/learning-path', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ topic, current_level, timeframe_weeks: 6 })
+                });
+                const data = await res.json();
+                if (data.success && data.learning_path) {
+                    renderLearningPath(data.learning_path);
+                } else {
+                    resultDiv.innerHTML = `<p style="color: #ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> ${data.detail || 'Could not generate roadmap.'}</p>`;
+                }
+            } catch (err) {
+                resultDiv.innerHTML = `<p style="color: #ef4444;"><i class="fa-solid fa-circle-exclamation"></i> Network error: ${err.message}</p>`;
+            } finally {
+                loading.style.display = 'none';
+                btn.disabled = false;
+            }
+        }
+
+        function renderLearningPath(path) {
+            const container = document.getElementById('pathResult');
+            let html = `
+                <div>
+                    <div class="roadmap-header">
+                        <h2 style="font-size: 1.3rem; color: #fff; margin-bottom: 6px;">🗺️ ${path.title || 'Learning Roadmap'}</h2>
+                        <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 8px;">${path.overview || ''}</p>
+                        <div style="display: flex; gap: 12px; font-size: 0.82rem; color: var(--secondary);">
+                            <span><i class="fa-regular fa-clock"></i> ~${path.estimated_hours_per_week || 5} hrs/week</span>
+                            <span><i class="fa-solid fa-layer-group"></i> ${path.difficulty || 'All Levels'}</span>
+                        </div>
+                    </div>
+            `;
+
+            if (Array.isArray(path.phases)) {
+                path.phases.forEach((p, idx) => {
+                    html += `
+                        <div class="roadmap-phase">
+                            <div class="phase-card">
+                                <div class="phase-title">
+                                    <span>Phase ${p.phase_number || (idx + 1)}: ${p.phase_name}</span>
+                                    <span class="phase-badge">${p.duration || '2 Weeks'}</span>
+                                </div>
+                                <div style="margin-top: 10px;">
+                                    <label style="color: #94a3b8; font-size: 0.75rem;">Key Milestones:</label>
+                    `;
+
+                    if (Array.isArray(p.milestones)) {
+                        p.milestones.forEach(m => {
+                            html += `
+                                <div class="milestone-item">
+                                    <i class="fa-solid fa-check-circle"></i>
+                                    <span>${m}</span>
+                                </div>
+                            `;
+                        });
+                    }
+
+                    if (p.practice_project) {
+                        html += `
+                            <div style="margin-top: 10px; background: rgba(99, 102, 241, 0.1); border-left: 3px solid var(--primary); padding: 8px 12px; border-radius: 4px; font-size: 0.85rem;">
+                                <strong style="color: #a5b4fc;"><i class="fa-solid fa-laptop-code"></i> Hands-on Project:</strong> ${p.practice_project}
+                            </div>
+                        `;
+                    }
+
+                    html += `
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            if (Array.isArray(path.pro_tips) && path.pro_tips.length > 0) {
+                html += `
+                    <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 8px; padding: 14px; margin-top: 10px;">
+                        <strong style="color: #fbbf24; font-size: 0.9rem;"><i class="fa-solid fa-lightbulb"></i> Pro Tips for Success:</strong>
+                        <ul style="margin-left: 1.2rem; margin-top: 6px; font-size: 0.85rem; color: #fde68a;">
+                `;
+                path.pro_tips.forEach(tip => {
+                    html += `<li>${tip}</li>`;
+                });
+                html += `</ul></div>`;
+            }
+
+            html += `</div>`;
+            container.innerHTML = html;
+        }
+
+        // 5. Handle Summarize
+        async function handleSummarize() {
+            const textVal = document.getElementById('summaryInput').value.trim();
+            const format = document.getElementById('summaryFormat').value;
+            const loading = document.getElementById('summaryLoading');
+            const resultDiv = document.getElementById('summaryResult');
+            const btn = document.getElementById('summaryBtn');
+
+            if (!textVal) return showToast('Please enter text to summarize!');
+
+            loading.style.display = 'flex';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch('/api/summarize', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: textVal, format })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    resultDiv.innerHTML = marked.parse(data.summary);
+                } else {
+                    resultDiv.innerHTML = `<p style="color: #ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> ${data.detail || 'Error occurred.'}</p>`;
+                }
+            } catch (err) {
+                resultDiv.innerHTML = `<p style="color: #ef4444;"><i class="fa-solid fa-circle-exclamation"></i> Network error: ${err.message}</p>`;
+            } finally {
+                loading.style.display = 'none';
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+
+</html>

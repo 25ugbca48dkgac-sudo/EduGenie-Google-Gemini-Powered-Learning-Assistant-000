@@ -1,0 +1,13 @@
+{
+  "name": "edugen",
+  "version": "1.0.0",
+  "description": "EduGenie is a lightweight AI-powered educational assistant that simplifies learning through generative AI powered by **Google Gemini** and **FastAPI**. Designed for learners of all academic levels, EduGenie offers interactive Q&A, intuitive concept simplifications, dynamic quizzes with real-time scoring, structured learning path roadmaps, and high-yield passage summarization.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
